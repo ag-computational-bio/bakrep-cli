@@ -3,7 +3,7 @@ from bakrep.model import DownloadSet
 import tempfile
 
 
-class FilterResultsTest(unittest.TestCase):
+class PersistDownloadSetTest(unittest.TestCase):
     ids = ['a', 'b', 'c']
 
     def test_initial_toDownload_ids_should_be_persisted(self):

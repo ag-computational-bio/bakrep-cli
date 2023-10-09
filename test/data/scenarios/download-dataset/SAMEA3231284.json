@@ -1,0 +1,95 @@
+{
+  "id": "SAMEA3231284",
+  "results": [
+    {
+      "md5": "7741a0e0986f1835ef26900189c94a7b",
+      "size": 965037,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.bakta.json.gz",
+      "attributes": {
+        "type": "annotation",
+        "filetype": "json",
+        "tool": "bakta"
+      }
+    },
+    {
+      "md5": "470271e1b9f2be7bc60ad32a20359a97",
+      "size": 137591,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.bakta.faa.gz",
+      "attributes": {
+        "type": "annotation",
+        "filetype": "faa",
+        "tool": "bakta"
+      }
+    },
+    {
+      "md5": "9febbd972c9fbf389a4dad9db56da764",
+      "size": 205180,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.bakta.ffn.gz",
+      "attributes": {
+        "type": "annotation",
+        "filetype": "ffn",
+        "tool": "bakta"
+      }
+    },
+    {
+      "md5": "1fc78ead8ca2472e5de98d9610e39b82",
+      "size": 716583,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.bakta.gbff.gz",
+      "attributes": {
+        "type": "annotation",
+        "filetype": "gbff",
+        "tool": "bakta"
+      }
+    },
+    {
+      "md5": "fea7b38bc20f26326abb39604eaa71a5",
+      "size": 378160,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.bakta.gff3.gz",
+      "attributes": {
+        "type": "annotation",
+        "filetype": "gff3",
+        "tool": "bakta"
+      }
+    },
+    {
+      "md5": "f87bd92efc81ce6e8c4fef3dc656ba03",
+      "size": 307,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.assemblyscan.json.gz",
+      "attributes": {
+        "type": "qc",
+        "filetype": "json",
+        "tool": "assemblyscan"
+      }
+    },
+    {
+      "md5": "7c5e99d7c3ff6b29dafae701ce7e11d8",
+      "size": 168,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.checkm2.json.gz",
+      "attributes": {
+        "type": "qc",
+        "filetype": "json",
+        "tool": "checkm2"
+      }
+    },
+    {
+      "md5": "5da8a4e586db75ac362e00ba7a22d901",
+      "size": 227,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.gtdbtk.json.gz",
+      "attributes": {
+        "type": "taxonomy",
+        "filetype": "json",
+        "tool": "gtdbtk"
+      }
+    },
+    {
+      "md5": "3fff68365c55eaa133338d2f4b4cbb81",
+      "size": 210,
+      "url": "https://bakrep-data.s3.computational.bio.uni-giessen.de/SAMEA3231284/SAMEA3231284.mlst.json.gz",
+      "attributes": {
+        "type": "taxonomy",
+        "filetype": "json",
+        "tool": "mlst"
+      }
+    }
+  ]
+}

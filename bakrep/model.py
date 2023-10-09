@@ -1,3 +1,5 @@
+import requests
+import urllib.parse
 from typing import Collection, List
 from pathlib import Path
 
@@ -28,11 +30,20 @@ class Result:
                 return True
         return False
 
+    @staticmethod
+    def from_dict(dict: dict):
+        return Result(dict['url'], dict['attributes'], dict['md5'], dict['size'])
+
 
 class Dataset:
     def __init__(self, id: str, results: List[Result]):
         self.id = id
         self.results = results
+
+    def __eq__(self, __value):
+        if isinstance(__value, Dataset):
+            return self.id == __value.id and self.results == __value.results
+        return False
 
     def filter(self, filters: List[dict]):
         if (len(filters) == 0):
@@ -42,6 +53,14 @@ class Dataset:
             if r.matches(filters):
                 filtered.append(r)
         return filtered
+
+    @staticmethod
+    def from_dict(dict: dict):
+        results: List[Result] = []
+        if 'results' in dict:
+            results = list(map(lambda x: Result.from_dict(x), dict['results']))
+        id = dict['id']
+        return Dataset(id, results)
 
 
 class DownloadSet:
@@ -103,3 +122,29 @@ class DownloadSet:
         else:
             toDownloadPath.write_text("\n".join(toDownload))
         return DownloadSet(p, toDownload, downloaded)
+
+
+class DownloadFailedException(Exception):
+    pass
+
+
+class BakrepDownloader:
+    def __init__(self, url: str = "https://bakrep.computational.bio/api/v1/datasets/"):
+        self.url = url
+
+    def download(self, id: str, filters: List[dict], target_directory: str):
+        dataset_url = self.url + id
+        r = requests.get(self.url + id)
+        if not r.ok:
+            raise DownloadFailedException(id, dataset_url, r.status_code)
+        json = r.json()
+        ds = Dataset.from_dict(json)
+        results = ds.filter(filters)
+        for res in results:
+            r = requests.get(res.url)
+            if not r.ok:
+                raise DownloadFailedException(id, res.url, r.status_code)
+            result_url = urllib.parse.urlparse(res.url)
+            filename = Path(result_url.path).name
+            target = Path(target_directory) / filename
+            target.write_bytes(r.content)

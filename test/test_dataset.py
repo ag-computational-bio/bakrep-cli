@@ -21,22 +21,26 @@ class FilterResultsTest(unittest.TestCase):
     def test_results_should_be_filtered_correctly_with_single_criterion(self):
         (d, r) = self.example_data()
         filtered = d.filter([{"type": "233"}])
-        self.assertEquals(filtered, [r[2]])
+        self.assertEqual(filtered, [r[2]])
 
     def test_results_should_be_filtered_correctly_with_multiple_criteria(self):
         (d, r) = self.example_data()
         filtered = d.filter([{"type": "abc"}, {"type": "233"}])
-        self.assertEquals(filtered, [r[0], r[2]])
+        self.assertEqual(filtered, [r[0], r[2]])
 
     def test_no_filters_should_include_all(self):
         (d, r) = self.example_data()
         filtered = d.filter([])
-        self.assertEquals(filtered, r)
+        self.assertEqual(filtered, r)
 
     def test_empty_filter_should_include_all(self):
         (d, r) = self.example_data()
         filtered = d.filter([{}])
-        self.assertEquals(filtered, r)
+        self.assertEqual(filtered, r)
+
+    def test_from_json_should_work(self):
+        parsed = Dataset.from_dict({'id': 'abc', 'results': []})
+        self.assertEqual(parsed, Dataset("abc", []))
 
 
 if __name__ == '__main__':
