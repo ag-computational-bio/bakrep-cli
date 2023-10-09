@@ -16,5 +16,7 @@ Setup a virtualenv for development and install it in editable mode
 # install in development environment
 virtualenv --python=python3 venv; source venv/bin/activate;
 pip3 install -e .
-```
 
+# Run unit tests
+python -m unittest
+```

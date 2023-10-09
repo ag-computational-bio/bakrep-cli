@@ -1,4 +1,5 @@
-from typing import List
+from typing import Collection, List
+from pathlib import Path
 
 
 class Result:
@@ -41,3 +42,64 @@ class Dataset:
             if r.matches(filters):
                 filtered.append(r)
         return filtered
+
+
+class DownloadSet:
+    """
+    A collection of datasets that should be downloaded
+    """
+
+    def __init__(self, location: Path, toDownload=set(), downloaded=set()):
+        self.location = location
+        self.toDownload = toDownload
+        self.downloaded = downloaded
+        self.__downloaded_writer__ = open(location/'downloaded.dat', "a")
+        self.__toDownload_writer__ = open(location/'toDownload.dat', "a")
+
+    def close(self):
+        self.__downloaded_writer__.close()
+        self.__toDownload_writer__.close()
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.close()
+
+    def __enter__(self):
+        return self
+
+    def add_dataset(self, datasetId: str):
+        first = len(self.toDownload) == 0
+        self.toDownload.add(datasetId)
+        if not first:
+            self.__toDownload_writer__.write("\n")
+        self.__toDownload_writer__.write(datasetId)
+
+    def finish_dataset(self, datasetId: str):
+        first = len(self.downloaded) == 0
+        self.downloaded.add(datasetId)
+        self.toDownload.remove(datasetId)
+        if not first:
+            self.__downloaded_writer__.write("\n")
+        self.__downloaded_writer__.write(datasetId)
+
+    @staticmethod
+    def at_location(path: str, ids: Collection[str] = set(), skipDownloaded=False, skipToDownload=False):
+        """
+        Factory for a downloadset that persists the downloaded ids to disc
+        """
+        p = Path(path) / '.progress'
+        toDownloadPath = p / 'toDownload.dat'
+        downloadedPath = p / 'downloaded.dat'
+        downloaded = set()
+        toDownload = set(ids)
+        if not p.exists():
+            p.mkdir(parents=True)
+
+        if not skipDownloaded and downloadedPath.exists():
+            downloaded = set(downloadedPath.read_text().split("\n"))
+        else:
+            downloadedPath.write_text("\n".join(downloaded))
+        if not skipToDownload and toDownloadPath.exists():
+            toDownload = set(toDownloadPath.read_text().split("\n"))
+        else:
+            toDownloadPath.write_text("\n".join(toDownload))
+        return DownloadSet(p, toDownload, downloaded)
