@@ -4,6 +4,13 @@ import sys
 import bakrep.download
 
 
+def entrypoint():
+    if (len(sys.argv) > 1):
+        main(sys.argv[1:])
+    else:
+        main(["--help"])
+
+
 def main(argv):
     parser = argparse.ArgumentParser(
         add_help=True,
@@ -58,4 +65,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    entrypoint()
