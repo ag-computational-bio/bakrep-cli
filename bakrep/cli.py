@@ -22,17 +22,17 @@ def main(argv):
     input_group = download_parser.add_argument_group("input", )
     input_group.add_argument(
         '-t', '--tsv',
-        help="A tsv with the datasets to download. The first column will be used as the id column."
+        help="A tsv with the datasets ids to download. The dataset ids are extracted from the first column."
     )
     input_group.add_argument(
         '-e', '--entries',
-        help="""Comma separated list of entries to download"""
+        help="""Comma separated list of dataset ids to download"""
     )
     output_group = download_parser.add_argument_group("output")
     output_group.add_argument(
         '-d', '--directory',
         default="./",
-        help="The directory where the datasets will be downloaded to. (default %(default)s)"
+        help="The target directory for the datasets. The datasets will be saved in group directories to avoid too many elements in a single directory. (default %(default)s)"
     )
     output_group.add_argument(
         '-F', '--flat',
@@ -47,9 +47,16 @@ def main(argv):
         dest="filters",
         action="append",
         help="""Only download result files that match the attribute-filter. Can be provided multiple times.
-          Example: '-m tool:bakta,filetype:gff3'"""
+          Example: '-m tool:bakta,filetype:gff3'.
+          Currently known attributes and values are:
+            tool:bakta|checkm2|gtdbtk|assemblyscan,
+            filetype:json|ffn|faa|gff3|gbff,
+            type: qc|annotation|taxonomy
+          """
     )
-    download_parser.add_argument(
+
+    download_group = download_parser.add_argument_group("download")
+    download_group.add_argument(
         '-r', '--restart',
         action="store_true",
         default=False,
