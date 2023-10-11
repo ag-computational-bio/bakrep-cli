@@ -1,7 +1,8 @@
-import requests
 import urllib.parse
-from typing import Collection, List
 from pathlib import Path
+from typing import Collection, List
+
+import requests
 
 
 class Result:
@@ -23,7 +24,7 @@ class Result:
         for f in filters:
             matches = True
             for pair in f.items():
-                if self.attributes[pair[0]] != pair[1]:
+                if not pair[0] in self.attributes or self.attributes[pair[0]] != pair[1]:
                     matches = False
                     break
             if matches:
@@ -68,22 +69,31 @@ class DownloadSet:
     A collection of datasets that should be downloaded
     """
 
-    def __init__(self, location: Path, toDownload=set(), downloaded=set()):
+    def __init__(self, location: Path, toDownload=set(), downloaded=set(), failed=set()):
         self.location = location
         self.toDownload = toDownload
         self.downloaded = downloaded
+        self.failed = failed
         self.__downloaded_writer__ = open(location/'downloaded.dat', "a")
         self.__toDownload_writer__ = open(location/'toDownload.dat', "a")
+        self.__failed_writer__ = open(location/'failed.dat', "a")
 
     def close(self):
         self.__downloaded_writer__.close()
         self.__toDownload_writer__.close()
+        self.__failed_writer__.close()
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.close()
 
     def __enter__(self):
         return self
+
+    def __iter__(self):
+        pass
+
+    def download_list(self):
+        return list(self.toDownload.difference(self.downloaded))
 
     def add_dataset(self, datasetId: str):
         first = len(self.toDownload) == 0
@@ -92,24 +102,43 @@ class DownloadSet:
             self.__toDownload_writer__.write("\n")
         self.__toDownload_writer__.write(datasetId)
 
+    def downloaded_datasets(self):
+        return len(self.downloaded)
+
+    def total_datasets(self):
+        return len(self.toDownload)
+
+    def failed_datasets(self):
+        return len(self.failed)
+
     def finish_dataset(self, datasetId: str):
         first = len(self.downloaded) == 0
         self.downloaded.add(datasetId)
-        self.toDownload.remove(datasetId)
         if not first:
             self.__downloaded_writer__.write("\n")
+            self.__downloaded_writer__.flush()
         self.__downloaded_writer__.write(datasetId)
 
+    def failed_dataset(self, datasetId: str):
+        first = len(self.failed) == 0
+        self.failed.add(datasetId)
+        if not first:
+            self.__failed_writer__.write("\n")
+        self.__failed_writer__.write(datasetId)
+        self.__failed_writer__.flush()
+
     @staticmethod
-    def at_location(path: str, ids: Collection[str] = set(), skipDownloaded=False, skipToDownload=False):
+    def at_location(path: str, ids: Collection[str] = set(), skipDownloaded=False, skipToDownload=False, skipFailed=False):
         """
         Factory for a downloadset that persists the downloaded ids to disc
         """
         p = Path(path) / '.progress'
         toDownloadPath = p / 'toDownload.dat'
         downloadedPath = p / 'downloaded.dat'
+        failedPath = p / 'failed.dat'
         downloaded = set()
         toDownload = set(ids)
+        failed = set()
         if not p.exists():
             p.mkdir(parents=True)
 
@@ -121,7 +150,9 @@ class DownloadSet:
             toDownload = set(toDownloadPath.read_text().split("\n"))
         else:
             toDownloadPath.write_text("\n".join(toDownload))
-        return DownloadSet(p, toDownload, downloaded)
+        if not skipFailed and failedPath.exists():
+            failed = set(failedPath.read_text().split("\n"))
+        return DownloadSet(p, toDownload, downloaded, failed)
 
 
 class DownloadFailedException(Exception):

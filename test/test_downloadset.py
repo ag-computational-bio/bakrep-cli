@@ -1,6 +1,7 @@
-import unittest
-from bakrep.model import DownloadSet
 import tempfile
+import unittest
+
+from bakrep.model import DownloadSet
 
 
 class PersistDownloadSetTest(unittest.TestCase):
@@ -44,3 +45,11 @@ class PersistDownloadSetTest(unittest.TestCase):
                 ds.finish_dataset("b")
             with DownloadSet.at_location(tmp, skipToDownload=True) as ds:
                 self.assertEqual(set(), ds.toDownload)
+
+    def test_iterator_should_return_only_ids_to_download(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with DownloadSet.at_location(tmp, self.ids) as ds:
+                ds.finish_dataset("b")
+                dl = ds.download_list()
+                dl.sort()
+                self.assertEqual(dl, ["a", "c"])
