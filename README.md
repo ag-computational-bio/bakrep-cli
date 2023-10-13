@@ -1,4 +1,4 @@
-# BakRep data upload tool
+# BakRep data download tool
 
 This command line tool downloads bakrep datasets to your computer.
 
