@@ -172,10 +172,10 @@ class BakrepDownloader:
         ds = Dataset.from_dict(json)
         results = ds.filter(filters)
         for res in results:
-            r = requests.get(res.url)
+            r = requests.get(res.url, stream=True)
             if not r.ok:
                 raise DownloadFailedException(id, res.url, r.status_code)
             result_url = urllib.parse.urlparse(res.url)
             filename = Path(result_url.path).name
             target = Path(target_directory) / filename
-            target.write_bytes(r.content)
+            target.write_bytes(r.raw.data)
