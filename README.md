@@ -1,10 +1,10 @@
-# BakRep data download tool
+# BakRep CLI - genome download tool
 
-This command line tool downloads bakrep datasets to your computer.
+BakRep-CLI is a commandline tool to batch download genomic data (genomes, annotation, metadata) from BakRep to your computer.
 
 ## Usage
 
-The cli allows you to download bakrep-datasets to a directory on your computer.
+The CLI allows you to download BakRep datasets to a directory on your computer.
 
 ```txt
 usage: bakrep download [-h] [-t TSV] [-e ENTRIES] [-d DIRECTORY] [-F] [-m FILTERS] [-r]
