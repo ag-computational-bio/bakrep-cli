@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+import bakrep
 import bakrep.download
 
 
@@ -15,7 +16,11 @@ def main(argv):
     parser = argparse.ArgumentParser(
         add_help=True,
         prog='bakrep',
-        description='A tool to download bakrep datasets')
+        description='A CLI tool to download BakRep datasets',
+        epilog=f'Version: {bakrep.__version__}\nDOI: 10.1099\nmgen.0.001305\nURL: https://bakrep.computational.bio/about',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument('--version', action='version', version=f'%(prog)s {bakrep.__version__}')
 
     sub_parsers = parser.add_subparsers(title="actions", required=True, )
     download_parser = sub_parsers.add_parser('download')
