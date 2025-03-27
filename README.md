@@ -34,7 +34,7 @@ download:
 
 ## Getting started for development
 
-Python dependency: >=3.8
+Python dependency: >=3.9
 
 Setup a virtualenv for development and install it in editable mode
 
