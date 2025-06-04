@@ -33,7 +33,7 @@ class Result:
 
     @staticmethod
     def from_dict(dict: dict):
-        return Result(dict['url'], dict['attributes'], dict['md5'], dict['size'])
+        return Result(dict['url'], dict['attributes'], dict['md5'] if 'md5' in dict else "", dict['size'] if 'size' in dict else 0)
 
 
 class Dataset:
@@ -160,7 +160,7 @@ class DownloadFailedException(Exception):
 
 
 class BakrepDownloader:
-    def __init__(self, url: str = "https://bakrep.computational.bio/api/v1/datasets/"):
+    def __init__(self, url: str = "https://bakrep.computational.bio/api/v2/datasets/"):
         self.url = url
 
     def download(self, id: str, filters: List[dict], target_directory: str):

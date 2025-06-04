@@ -7,13 +7,10 @@ from requests_mock import Mocker
 from bakrep.cli import main
 
 
-def mock_result(id: str, suffix: str, attributes: dict,
-                md5="d41d8cd98f00b204e9800998ecf8427e"  # md5 sum for no content
-                ):
+def mock_result(id: str, suffix: str, attributes: dict):
     return {
         "url": f"https://bakrep-data.s3.computational.bio.uni-giessen.de/{id}/{id}.{suffix}",
         "attributes": attributes,
-        "md5": md5,
         "size": 0,
     }
 
@@ -25,7 +22,7 @@ def mock_dataset(m: Mocker, id: str):
         mock_result(id, "json", {"tool": "test", "filetype": "json"})
     ]}
     m.get(
-        f"https://bakrep.computational.bio/api/v1/datasets/{id}", json=dataset)
+        f"https://bakrep.computational.bio/api/v2/datasets/{id}", json=dataset)
     for r in dataset["results"]:
         m.get(r['url'], text='')
 

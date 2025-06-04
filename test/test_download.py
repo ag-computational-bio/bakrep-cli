@@ -6,7 +6,7 @@ import requests_mock
 
 
 def mockdataset(m, id):
-    m.get(f"https://bakrep.computational.bio/api/v1/datasets/{id}",
+    m.get(f"https://bakrep.computational.bio/api/v2/datasets/{id}",
           content=Path(f"./test/data/scenarios/download-dataset/{id}.json").read_bytes())
 
 
@@ -73,7 +73,7 @@ class BakrepDownloaderTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             id = "SAMEA3231284"
             m.get(
-                f"https://bakrep.computational.bio/api/v1/datasets/{id}", status_code=404)
+                f"https://bakrep.computational.bio/api/v2/datasets/{id}", status_code=404)
             with tempfile.TemporaryDirectory() as tmp:
                 d = BakrepDownloader()
                 self.assertRaises(DownloadFailedException, lambda: d.download(
